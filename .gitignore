@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Build output
+out/
+
+# VS Code test
+.vscode-test/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+*.vsix
