@@ -10,7 +10,7 @@
 // ==================================================
 
 import * as vscode from "vscode";
-
+import { DateTimeHelper } from "./date_time_helper";
 import { ProjectHelper } from "./project_helper";
 
 export class HeaderUpdater {
@@ -57,7 +57,7 @@ export class HeaderUpdater {
 
             else if (lines[i].startsWith("# Updated:")) {
 
-                lines[i] = `# Updated: ${this.getCurrentDateTime()}`;
+                lines[i] = `# Updated: ${DateTimeHelper.getCurrentDateTime()}`;
 
             }
 
@@ -94,43 +94,5 @@ export class HeaderUpdater {
         return true;
 
     }
-
-    // ==================================================
-    // CURRENT DATE/TIME
-    // ==================================================
-
-    private static getCurrentDateTime(): string {
-
-        const now = new Date();
-
-        const months = [
-            "January", "February", "March", "April",
-            "May", "June", "July", "August",
-            "September", "October", "November", "December"
-        ];
-
-        const month = months[now.getMonth()];
-
-        const day = now.getDate().toString().padStart(2, "0");
-
-        const year = now.getFullYear();
-
-        let hour = now.getHours();
-
-        const minute = now.getMinutes().toString().padStart(2, "0");
-
-        const ampm = hour >= 12 ? "PM" : "AM";
-
-        hour = hour % 12;
-
-        if (hour === 0) {
-
-            hour = 12;
-
-        }
-
-        return `${month} ${day}, ${year} ${hour}:${minute} ${ampm}`;
-
-    }
-
 }
+    
