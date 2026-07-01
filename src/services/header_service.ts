@@ -1,13 +1,13 @@
 // ==================================================
 // File: src/services/header_service.ts
-// Updated: July 01, 2026 2:45 PM
+// Updated: June 30, 2026 9:30 PM
 // Purpose:
 //     Handles automatic header processing.
 // ==================================================
 
 import * as vscode from "vscode";
 
-import { HeaderBuilder } from "../core/header_builder";
+import { HeaderBuilder } from "../builders/header_builder";
 
 export class HeaderService {
 
@@ -15,11 +15,11 @@ export class HeaderService {
     // PROCESS DOCUMENT
     // ==================================================
 
-    public static processDocument(
+    public static async processDocument(
 
         document: vscode.TextDocument
 
-    ): void {
+    ): Promise<void> {
 
         // ----------------------------------------
         // Python files only
@@ -57,9 +57,27 @@ export class HeaderService {
 
         }
 
-        // ----------------------------------------
-        // Build Header
-        // ----------------------------------------
+        const editor = vscode.window.activeTextEditor;
+
+        if (
+
+            !editor
+
+        ) {
+
+            return;
+
+        }
+
+        if (
+
+            editor.document !== document
+
+        ) {
+
+            return;
+
+        }
 
         const header = HeaderBuilder.build(
 
@@ -67,27 +85,25 @@ export class HeaderService {
 
         );
 
-        console.log(
+        await editor.edit(
 
-            "======================================"
+            edit => {
 
-        );
+                edit.insert(
 
-        console.log(
+                    new vscode.Position(
 
-            "Generated Header"
+                        0,
 
-        );
+                        0
 
-        console.log(
+                    ),
 
-            "======================================"
+                    header
 
-        );
+                );
 
-        console.log(
-
-            header
+            }
 
         );
 

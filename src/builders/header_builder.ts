@@ -1,5 +1,5 @@
 // ==================================================
-// File: src/core/header_builder.ts
+// File: src/services/header_builder.ts
 // Updated: June 30, 2026 9:15 PM
 // Purpose:
 //     Builds the standard MenuApp file header.
