@@ -1,7 +1,7 @@
 {
   "name": "menuappEngine",
-  "displayName": "MenuApp Engine",
-  "description": "Menu App Engine Tools",
+  "displayName": "MenuApp Developer Tools",
+  "description": "Developer tools for MenuAppEngine",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.125.0"
@@ -9,7 +9,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [

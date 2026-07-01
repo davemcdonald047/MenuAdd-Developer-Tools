@@ -1,26 +1,32 @@
 // ==================================================
-// File: src/headerManager.ts
-// Updated: July 01, 2026 11:20 AM
+// File: src/core/header_builder.ts
+// Updated: July 01, 2026 3:35 PM
 // Purpose:
-//     Builds and updates standard Python file headers.
+//     Builds standard source file headers.
 // ==================================================
 
 import * as path from "path";
 
-export class HeaderManager {
+export class HeaderBuilder {
 
-    public static buildHeader(
+    public static build(
+
         workspaceRoot: string,
+
         fileName: string
+
     ): string {
 
         const relativePath = path
             .relative(workspaceRoot, fileName)
             .replace(/\\/g, "/");
 
-        const updated = this.currentDateTime();
+        const now = new Date();
+
+        const updated = now.toLocaleString();
 
         return [
+
             "# ==================================================",
             `# File: ${relativePath}`,
             `# Updated: ${updated}`,
@@ -28,23 +34,9 @@ export class HeaderManager {
             "#",
             "# ==================================================",
             ""
+
         ].join("\n");
+
     }
 
-    private static currentDateTime(): string {
-
-        const now = new Date();
-
-        return now.toLocaleString(
-            "en-CA",
-            {
-                year: "numeric",
-                month: "long",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true
-            }
-        );
-    }
 }

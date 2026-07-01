@@ -1,17 +1,25 @@
 // ==================================================
 // File: src/events/document_events.ts
-// Updated: July 01, 2026 11:54 AM
+// Updated: July 01, 2026 12:45 PM
 // Purpose:
-//     Handles document events for the
+//     Registers document events for the
 //     MenuApp Developer Tools extension.
 // ==================================================
 
 import * as vscode from "vscode";
 
+import { HeaderService } from "../services/header_service";
+
 export class DocumentEvents {
 
+    // ==================================================
+    // REGISTER EVENTS
+    // ==================================================
+
     public static register(
+
         context: vscode.ExtensionContext
+
     ): void {
 
         // ----------------------------------------
@@ -76,9 +84,21 @@ export class DocumentEvents {
 
         console.log(
 
+            "SAVE EVENT"
+
+        );
+
+        console.log(
+
             "Saved:",
 
             document.fileName
+
+        );
+
+        HeaderService.processDocument(
+
+            document
 
         );
 
