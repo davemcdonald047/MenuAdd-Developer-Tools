@@ -1,13 +1,18 @@
 // ==================================================
+// Project: MenuApp-Developer-Tools
 // File: src/services/header_service.ts
-// Updated: June 30, 2026 9:30 PM
+// Updated: July 1, 2026 02:43 AM
+//
 // Purpose:
-//     Handles automatic header processing.
+//     Processes saved documents and inserts
+//     a standard header when one does not
+//     already exist.
 // ==================================================
 
 import * as vscode from "vscode";
 
 import { HeaderBuilder } from "../builders/header_builder";
+import { HeaderDetector } from "../events/headerdetector";
 
 export class HeaderService {
 
@@ -21,59 +26,19 @@ export class HeaderService {
 
     ): Promise<void> {
 
-        // ----------------------------------------
-        // Python files only
-        // ----------------------------------------
+        // Only process Python files
 
-        if (
-
-            !this.isSupportedLanguage(
-
-                document
-
-            )
-
-        ) {
+        if (document.languageId !== "python") {
 
             return;
 
         }
 
-        // ----------------------------------------
-        // Empty files only
-        // ----------------------------------------
+        const text = document.getText();
 
-        if (
+        // Header already exists
 
-            !this.isEmptyDocument(
-
-                document
-
-            )
-
-        ) {
-
-            return;
-
-        }
-
-        const editor = vscode.window.activeTextEditor;
-
-        if (
-
-            !editor
-
-        ) {
-
-            return;
-
-        }
-
-        if (
-
-            editor.document !== document
-
-        ) {
+        if (HeaderDetector.hasHeader(text)) {
 
             return;
 
@@ -85,61 +50,21 @@ export class HeaderService {
 
         );
 
-        await editor.edit(
+        const edit = new vscode.WorkspaceEdit();
 
-            edit => {
+        edit.insert(
 
-                edit.insert(
+            document.uri,
 
-                    new vscode.Position(
+            new vscode.Position(0, 0),
 
-                        0,
-
-                        0
-
-                    ),
-
-                    header
-
-                );
-
-            }
+            header
 
         );
 
-    }
+        await vscode.workspace.applyEdit(
 
-    // ==================================================
-    // SUPPORTED LANGUAGE
-    // ==================================================
-
-    private static isSupportedLanguage(
-
-        document: vscode.TextDocument
-
-    ): boolean {
-
-        return (
-
-            document.languageId === "python"
-
-        );
-
-    }
-
-    // ==================================================
-    // EMPTY DOCUMENT
-    // ==================================================
-
-    private static isEmptyDocument(
-
-        document: vscode.TextDocument
-
-    ): boolean {
-
-        return (
-
-            document.getText().trim().length === 0
+            edit
 
         );
 

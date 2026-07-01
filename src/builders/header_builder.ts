@@ -7,7 +7,7 @@
 
 import * as vscode from "vscode";
 
-import { ProjectHelper } from "../helpers/project_helper";
+ import { ProjectHelper } from "../helpers/project_helper";
 
 export class HeaderBuilder {
 
