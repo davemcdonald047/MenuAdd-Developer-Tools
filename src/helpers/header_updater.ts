@@ -1,15 +1,17 @@
 // ==================================================
 // Project: MenuApp-Developer-Tools
 // File: src/helpers/header_updater.ts
-// Updated: July 1, 2026 03:00 AM
+// Updated: July 1, 2026 03:13 AM
 //
 // Purpose:
-//     Updates an existing file header by
-//     refreshing the "Updated:" timestamp.
+//     Synchronizes the Project, File and
+//     Updated fields of an existing header.
 //
 // ==================================================
 
 import * as vscode from "vscode";
+
+import { ProjectHelper } from "./project_helper";
 
 export class HeaderUpdater {
 
@@ -27,35 +29,39 @@ export class HeaderUpdater {
 
         const lines = text.split(/\r?\n/);
 
-        let updatedLine = -1;
+        const project = ProjectHelper.getProjectName(
 
-        // ----------------------------------------
-        // Find Updated: line
-        // ----------------------------------------
+            document
+
+        );
+
+        const file = ProjectHelper.getRelativeFileName(
+
+            document
+
+        );
 
         for (let i = 0; i < Math.min(lines.length, 20); i++) {
 
-            if (lines[i].startsWith("# Updated:")) {
+            if (lines[i].startsWith("# Project:")) {
 
-                updatedLine = i;
+                lines[i] = `# Project: ${project}`;
 
-                break;
+            }
+
+            else if (lines[i].startsWith("# File:")) {
+
+                lines[i] = `# File: ${file}`;
+
+            }
+
+            else if (lines[i].startsWith("# Updated:")) {
+
+                lines[i] = `# Updated: ${this.getCurrentDateTime()}`;
 
             }
 
         }
-
-        if (updatedLine === -1) {
-
-            return false;
-
-        }
-
-        // ----------------------------------------
-        // Replace timestamp
-        // ----------------------------------------
-
-        lines[updatedLine] = `# Updated: ${this.getCurrentDateTime()}`;
 
         const edit = new vscode.WorkspaceEdit();
 
@@ -67,7 +73,11 @@ export class HeaderUpdater {
 
                 new vscode.Position(0, 0),
 
-                document.lineAt(document.lineCount - 1).range.end
+                document.lineAt(
+
+                    document.lineCount - 1
+
+                ).range.end
 
             ),
 
@@ -94,8 +104,9 @@ export class HeaderUpdater {
         const now = new Date();
 
         const months = [
-            "January","February","March","April","May","June",
-            "July","August","September","October","November","December"
+            "January", "February", "March", "April",
+            "May", "June", "July", "August",
+            "September", "October", "November", "December"
         ];
 
         const month = months[now.getMonth()];
