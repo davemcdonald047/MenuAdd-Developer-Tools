@@ -10,7 +10,7 @@
 // ==================================================
 
 import * as vscode from "vscode";
-
+import { LanguageHelper } from "../helpers/language_helper";
 import { HeaderBuilder } from "../builders/header_builder";
 import { HeaderDetector } from "../events/headerdetector";
 import { HeaderUpdater } from "../helpers/header_updater";
@@ -29,7 +29,7 @@ export class HeaderService {
 
         // Only process Python files
 
-        if (document.languageId !== "python") {
+        if (!LanguageHelper.supportsHeader(document)) {
 
             return;
 

@@ -10,8 +10,9 @@
 // ==================================================
 
 import * as vscode from "vscode";
-import { DateTimeHelper } from "./date_time_helper";
-import { ProjectHelper } from "./project_helper";
+import { DateTimeHelper } from "../helpers/date_time_helper";
+import { ProjectHelper } from "../helpers/project_helper";
+import { LanguageHelper } from "../helpers/language_helper";
 
 export class HeaderUpdater {
 
@@ -29,6 +30,9 @@ export class HeaderUpdater {
 
         const lines = text.split(/\r?\n/);
 
+        const comment = LanguageHelper.getCommentPrefix(document);
+
+        const language = LanguageHelper.getLanguageName(document);
         const project = ProjectHelper.getProjectName(
 
             document
@@ -43,21 +47,31 @@ export class HeaderUpdater {
 
         for (let i = 0; i < Math.min(lines.length, 20); i++) {
 
-            if (lines[i].startsWith("# Project:")) {
+            const line = lines[i]
+                .replace(/^#\s*/, "")
+                .replace(/^\/\/\s*/, "");
 
-                lines[i] = `# Project: ${project}`;
+            if (line.startsWith("Project:")) {
 
-            }
-
-            else if (lines[i].startsWith("# File:")) {
-
-                lines[i] = `# File: ${file}`;
+                lines[i] = `${comment} Project: ${project}`;
 
             }
 
-            else if (lines[i].startsWith("# Updated:")) {
+            else if (line.startsWith("File:")) {
 
-                lines[i] = `# Updated: ${DateTimeHelper.getCurrentDateTime()}`;
+                lines[i] = `${comment} File: ${file}`;
+
+            }
+
+            else if (line.startsWith("Updated:")) {
+
+                lines[i] = `${comment} Updated: ${DateTimeHelper.getCurrentDateTime()}`;
+
+            }
+
+            else if (line.startsWith("Language:")) {
+
+                lines[i] = `${comment} Language: ${language}`;
 
             }
 

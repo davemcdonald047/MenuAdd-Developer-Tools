@@ -8,6 +8,7 @@
 import * as vscode from "vscode";
 import { DateTimeHelper } from "../helpers/date_time_helper";
 import { ProjectHelper } from "../helpers/project_helper";
+import { LanguageHelper } from "../helpers/language_helper";
 
 export class HeaderBuilder {
 
@@ -33,20 +34,33 @@ export class HeaderBuilder {
 
         );
 
+        const comment = LanguageHelper.getCommentPrefix(
+
+            document
+
+        );
+
+        const language = LanguageHelper.getLanguageName(
+
+            document
+
+        );
+
         const created = DateTimeHelper.getCurrentDateTime();
 
         const updated = created;
 
         return [
 
-            "# ==================================================",
-            `# Project: ${project}`,
-            `# File: ${file}`,
-            `# Created: ${created}`,
-            `# Updated: ${updated}`,
-            "# Purpose:",
-            "#",
-            "# ==================================================",
+            `${comment} ==================================================`,
+            `${comment} Project: ${project}`,
+            `${comment} File: ${file}`,
+            `${comment} Created: ${created}`,
+            `${comment} Updated: ${updated}`,
+            `${comment} Language: ${language}`,
+            `${comment} Purpose:`,
+            `${comment}`,
+            `${comment} ==================================================`,
             ""
 
         ].join("\n");
