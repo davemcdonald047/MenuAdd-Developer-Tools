@@ -1,11 +1,13 @@
 // ==================================================
 // File: src/services/header_service.ts
-// Updated: July 01, 2026
+// Updated: July 01, 2026 2:45 PM
 // Purpose:
 //     Handles automatic header processing.
 // ==================================================
 
 import * as vscode from "vscode";
+
+import { HeaderBuilder } from "../core/header_builder";
 
 export class HeaderService {
 
@@ -20,12 +22,16 @@ export class HeaderService {
     ): void {
 
         // ----------------------------------------
-        // Only Python files
+        // Python files only
         // ----------------------------------------
 
         if (
 
-            document.languageId !== "python"
+            !this.isSupportedLanguage(
+
+                document
+
+            )
 
         ) {
 
@@ -34,24 +40,90 @@ export class HeaderService {
         }
 
         // ----------------------------------------
-        // Only empty files
+        // Empty files only
         // ----------------------------------------
 
         if (
 
-            document.getText().trim().length > 0
+            !this.isEmptyDocument(
+
+                document
+
+            )
 
         ) {
 
             return;
 
         }
+
+        // ----------------------------------------
+        // Build Header
+        // ----------------------------------------
+
+        const header = HeaderBuilder.build(
+
+            document
+
+        );
 
         console.log(
 
-            "Empty Python File:",
+            "======================================"
 
-            document.fileName
+        );
+
+        console.log(
+
+            "Generated Header"
+
+        );
+
+        console.log(
+
+            "======================================"
+
+        );
+
+        console.log(
+
+            header
+
+        );
+
+    }
+
+    // ==================================================
+    // SUPPORTED LANGUAGE
+    // ==================================================
+
+    private static isSupportedLanguage(
+
+        document: vscode.TextDocument
+
+    ): boolean {
+
+        return (
+
+            document.languageId === "python"
+
+        );
+
+    }
+
+    // ==================================================
+    // EMPTY DOCUMENT
+    // ==================================================
+
+    private static isEmptyDocument(
+
+        document: vscode.TextDocument
+
+    ): boolean {
+
+        return (
+
+            document.getText().trim().length === 0
 
         );
 

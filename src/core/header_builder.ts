@@ -1,34 +1,45 @@
 // ==================================================
 // File: src/core/header_builder.ts
-// Updated: July 01, 2026 3:35 PM
+// Updated: June 30, 2026 9:15 PM
 // Purpose:
-//     Builds standard source file headers.
+//     Builds the standard MenuApp file header.
 // ==================================================
 
-import * as path from "path";
+import * as vscode from "vscode";
+
+import { ProjectHelper } from "../helpers/project_helper";
 
 export class HeaderBuilder {
 
+    // ==================================================
+    // BUILD HEADER
+    // ==================================================
+
     public static build(
 
-        workspaceRoot: string,
-
-        fileName: string
+        document: vscode.TextDocument
 
     ): string {
 
-        const relativePath = path
-            .relative(workspaceRoot, fileName)
-            .replace(/\\/g, "/");
+        const project = ProjectHelper.getProjectName(
 
-        const now = new Date();
+            document
 
-        const updated = now.toLocaleString();
+        );
+
+        const file = ProjectHelper.getRelativeFileName(
+
+            document
+
+        );
+
+        const updated = this.getCurrentDateTime();
 
         return [
 
             "# ==================================================",
-            `# File: ${relativePath}`,
+            `# Project: ${project}`,
+            `# File: ${file}`,
             `# Updated: ${updated}`,
             "# Purpose:",
             "#",
@@ -36,6 +47,43 @@ export class HeaderBuilder {
             ""
 
         ].join("\n");
+
+    }
+
+    // ==================================================
+    // CURRENT DATE/TIME
+    // ==================================================
+
+    private static getCurrentDateTime(): string {
+
+        const now = new Date();
+
+        const months = [
+            "January","February","March","April","May","June",
+            "July","August","September","October","November","December"
+        ];
+
+        const month = months[now.getMonth()];
+
+        const day = now.getDate().toString().padStart(2, "0");
+
+        const year = now.getFullYear();
+
+        let hour = now.getHours();
+
+        const minute = now.getMinutes().toString().padStart(2, "0");
+
+        const ampm = hour >= 12 ? "PM" : "AM";
+
+        hour = hour % 12;
+
+        if (hour === 0) {
+
+            hour = 12;
+
+        }
+
+        return `${month} ${day}, ${year} ${hour}:${minute} ${ampm}`;
 
     }
 
