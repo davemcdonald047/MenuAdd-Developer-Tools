@@ -13,6 +13,7 @@ import * as vscode from "vscode";
 
 import { HeaderBuilder } from "../builders/header_builder";
 import { HeaderDetector } from "../events/headerdetector";
+import { HeaderUpdater } from "../helpers/header_updater";
 
 export class HeaderService {
 
@@ -40,9 +41,11 @@ export class HeaderService {
 
         if (HeaderDetector.hasHeader(text)) {
 
+            await HeaderUpdater.updateHeader(document);
+
             return;
 
-        }
+}       
 
         const header = HeaderBuilder.build(
 
